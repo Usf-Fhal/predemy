@@ -28,6 +28,11 @@ import java.time.LocalDateTime;
  * via email before the account can be marked as active.
  * </p>
  * 
+ * <p>
+ * Note: The `password` field is currently stored as a plain string. This will
+ * be updated in the future to use a more secure approach, such as hashing, to
+ * enhance security.
+ * </p>
  */
 @Data
 @NoArgsConstructor

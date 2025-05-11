@@ -7,6 +7,9 @@ Predemy is a platform for online education. This project follows an MVP (Minimum
 Project architecture diagram can be found here:
 [Architecture Diagram](https://claude.ai/public/artifacts/409a0177-301f-4667-8fe4-ac9a2a8338f0)
 
+## Database Schema
+[Database Schema](https://dbdiagram.io/d/predmey-6820d6125b2fc4582f1b5364)
+
 ## Services Status
 
 | Service | Status | Description |
