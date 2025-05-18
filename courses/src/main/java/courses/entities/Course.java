@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
@@ -33,12 +32,11 @@ import java.math.BigDecimal;
 public class Course {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "VARCHAR(255)")
-    private String uuid;
-
-    @Column(nullable = false)
+    private String  uuid; // Unique identifier for the course
+    
+    @Column(nullable = false , unique = true)
     private String title;
 
     @Column(columnDefinition = "TEXT")
@@ -52,7 +50,7 @@ public class Course {
     private Status status;
 
     // The `instructor_id` field is a string that references the UUID of the instructor
-    private String instructor_id;
+    private String instructorId;
 
     @CreationTimestamp
     @Column(name = "created_at")
