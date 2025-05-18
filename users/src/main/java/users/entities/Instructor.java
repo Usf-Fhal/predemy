@@ -5,11 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -17,15 +13,13 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "instructors")
 public class Instructor {
-
+    
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String uuid;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "uuid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "uuid", nullable = false)
     private User user;
 
     @Column(columnDefinition = "TEXT")
@@ -43,11 +37,6 @@ public class Instructor {
     @Column(nullable = false)
     private boolean isVerified;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 
     // Custom constructor with required fields
     public Instructor(User user, String specialization, String qualification) {

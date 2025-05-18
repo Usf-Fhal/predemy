@@ -116,4 +116,71 @@ class UserServiceImplTest {
             userService.findByUuid("non-existent-uuid");
         });
     }
+
+    @Test
+    void subscribe_WithValidStudentAndInstructor_ShouldCreateSubscription() {
+        // Arrange
+        User student = new User("Alice", "Student", "alice.student@test.com", "password");
+        student.setRole(Role.STUDENT);
+        User instructor = new User("Bob", "Instructor", "bob.instructor@test.com", "password");
+        instructor.setRole(Role.INSTRUCTOR);
+
+        User savedStudent = userService.saveUser(student);
+        User savedInstructor = userService.saveUser(instructor);
+
+        // Act
+        var subscription = ((users.services.UserServiceImpl) userService).subscribe(savedStudent, savedInstructor);
+
+        // Assert
+        assertNotNull(subscription);
+        assertEquals(savedStudent, subscription.getStudent());
+        assertEquals(savedInstructor, subscription.getInstructor());
+    }
+
+    @Test
+    void subscribe_WithNonInstructorTarget_ShouldThrowException() {
+        // Arrange
+        User student = new User("Charlie", "Student", "charlie.student@test.com", "password");
+        student.setRole(Role.STUDENT);
+        User notInstructor = new User("Dave", "Student", "dave.user@test.com", "password");
+        notInstructor.setRole(Role.STUDENT);
+
+        User savedStudent = userService.saveUser(student);
+        User savedNotInstructor = userService.saveUser(notInstructor);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> {
+            ((users.services.UserServiceImpl) userService).subscribe(savedStudent, savedNotInstructor);
+        });
+    }
+
+    @Test
+    void subscribe_WithNonStudentUser_ShouldThrowException() {
+        // Arrange
+        User instructor = new User("Grace", "Instructor", "grace.instructor@test.com", "password");
+        instructor.setRole(Role.INSTRUCTOR);
+        User anotherInstructor = new User("Heidi", "Instructor", "heidi.instructor@test.com", "password");
+        anotherInstructor.setRole(Role.INSTRUCTOR);
+
+        User savedInstructor = userService.saveUser(instructor);
+        User savedAnotherInstructor = userService.saveUser(anotherInstructor);
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () -> {
+            ((users.services.UserServiceImpl) userService).subscribe(savedInstructor, savedAnotherInstructor);
+        });
+    }
+
+    @Test
+    void subscribe_InstructorSubscribesToSelf_ShouldThrowException() {
+        // Arrange
+        User instructor = new User("Ivan", "Instructor", "ivan.instructor@test.com", "password");
+        instructor.setRole(Role.INSTRUCTOR);
+        User savedInstructor = userService.saveUser(instructor);
+
+        // Act & Assert
+        assertThrows(IllegalStateException.class, () -> {
+            ((users.services.UserServiceImpl) userService).subscribe(savedInstructor, savedInstructor);
+        });
+    }
 }
