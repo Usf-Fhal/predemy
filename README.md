@@ -3,12 +3,22 @@
 ## Overview
 Predemy is a platform for online education. This project follows an MVP (Minimum Viable Product) approach with microservices architecture.
 
-## Architecture
-Project architecture diagram can be found here:
-[Architecture Diagram](https://claude.ai/public/artifacts/409a0177-301f-4667-8fe4-ac9a2a8338f0)
+## Security Architecture
+We implement a hybrid security approach for optimal performance and security:
 
-## Database Schema
-[Database Schema](https://dbdiagram.io/d/predmey-6820d6125b2fc4582f1b5364)
+- **Standard Requests**: JWT stateless validation
+  - Signature verification
+  - Expiration check
+  - Role-based access control
+
+- **Critical Operations** (Planned): Enhanced security with state validation
+  - JWT validation plus database check
+  - Redis-based token blacklist/verification
+  - Will be used for sensitive operations:
+    - Password changes
+    - Payment processing
+    - Account deletion
+    - Profile updates
 
 ## Services Status
 
@@ -18,25 +28,26 @@ Project architecture diagram can be found here:
 | Course Service | ✅ MVP Complete | Manages courses, enrollments and instructor content |
 | Register Service | ✅ Complete | Eureka Server for service discovery |
 | Proxy Service | ✅ Complete | API Gateway using Spring Cloud Gateway |
-| Auth Service | 🏗️ In Progress | User authentication and authorization |
+| Auth Service | 🚧 In Development | Basic JWT authentication, more features planned |
 | Notification Service | 📅 Planned | Email notifications for registered users |
 
-## Project Structure
-```
-predemy/
-├── users/              # User service
-├── courses/           # Course management service
-├── register/          # Eureka Server
-├── proxy/             # API Gateway
-├── auth/              # Authentication service
-└── notification/      # Notification service (planned)
-```
+## Auth Service Roadmap
+- [x] Basic JWT authentication
+- [x] Role-based access control
+- [x] Service-to-service communication
+- [ ] Refresh token implementation
+- [ ] Redis integration for token management
+- [ ] Enhanced security for sensitive operations
+- [ ] Token blacklisting
+- [ ] Session management
+- [ ] Rate limiting
 
 ## Technical Stack
 - Java 17
 - Spring Boot
 - Spring Cloud (Eureka, Gateway)
 - Spring Data JPA
+- Redis (Planned - Security state management)
 - Maven
 - JUnit 5
 - H2 Database (Testing)
@@ -77,9 +88,9 @@ mvn clean install
   - Dynamic route discovery
   - Load balancing
 - [ ] Authentication Service
-  - JWT implementation
+  - Hybrid JWT implementation
+    - Stateless validation for standard requests
+    - Redis-backed validation for critical operations
   - Security configuration
-- [ ] Notification Service
-  - Email notifications
-  - User alerts
+  - Token management
 

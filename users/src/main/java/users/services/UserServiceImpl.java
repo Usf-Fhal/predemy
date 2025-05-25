@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+
     @Override
     public void deleteUser(String uuid) {
         User user = findByUuid(uuid);
@@ -53,6 +54,18 @@ public class UserServiceImpl implements UserService {
     public User findByUuid(String uuid) {
         return userRepository.findById(uuid)
             .orElseThrow(() -> new EntityNotFoundException("User not found with uuid: " + uuid));
+    }
+
+    @Override
+    public User findByEmailAndPassword(String email, String password) {
+        return userRepository.findByUsernameAndPassword(email, password)
+            .orElseThrow(() -> new EntityNotFoundException("User not found with provided email and password."));
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
     }
 
     /**
